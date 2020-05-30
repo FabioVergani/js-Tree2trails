@@ -35,7 +35,7 @@
 
 	P.all(deps).then(()=>{
 		deps.length=0;
-		w.dispatchEvent(new Event('depsLoaded'));console.info('zz')
+		w.dispatchEvent(new Event('depsLoaded'))
 	}).catch(e=>{
 		w.stop();
 		console.info('deps error',e)
