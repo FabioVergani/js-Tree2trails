@@ -46,6 +46,7 @@
 	})
 })(window);
 /*
+
 demo.js
 onceAt(window,'demoCanStart',({target:w})=>{
 	console.group('demo');
@@ -54,4 +55,35 @@ onceAt(window,'demoCanStart',({target:w})=>{
 	$id=x=>$d.getElementById(x);
 	console.groupEnd('demo')
 });
+
+<!DOCTYPE html>
+<html lang="en" translate="no" spellcheck="false">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Demo</title>
+		<link rel="stylesheet" href="./demo.css">
+		<script src="./res/script/init.js" data-deps='[
+			[
+				"./res/script/",
+				[
+					"contextMenu.js"
+				]
+			],[
+				"./",
+				[
+					"demo.js"
+				]
+			]
+		]'></script>
+	</head>
+	<body>
+		<main>
+			<article id='content' style='visibility:hidden'>
+				<h2>Demo</h2>
+				<!-- ... -->
+			</article>
+		</main>
+	</body>
+</html>
 */
