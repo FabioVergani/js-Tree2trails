@@ -35,9 +35,23 @@
 
 	P.all(deps).then(()=>{
 		deps.length=0;
-		w.dispatchEvent(new Event('depsLoaded'))
+		const f=()=>{w.dispatchEvent(new Event('demoCanStart'))};
+		if(d.readyState!=='complete'){
+			onceAt(w,'load',f)
+		}else{
+			f({target:w})
+		}
 	}).catch(e=>{
-		w.stop();
-		console.info('deps error',e)
+		w.stop()
 	})
 })(window);
+/*
+demo.js
+onceAt(window,'demoCanStart',({target:w})=>{
+	console.group('demo');
+	console.log('ready');//deps loaded & readyState complete..
+	const {onceAt,document:$d}=w,
+	$id=x=>$d.getElementById(x);
+	console.groupEnd('demo')
+});
+*/
