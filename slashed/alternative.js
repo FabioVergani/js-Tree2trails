@@ -1,39 +1,42 @@
 (w=>{
-	const onceAt=(e,n,c)=>{
+	const frag=new DocumentFragment(),
+	onceAt=(e,n,c)=>{
 		const f=o=>{e.removeEventListener(n,f);c(o)};
 		e.addEventListener(n,f);
 		return f
 	},
-	drop=(o,n)=>{
-		const e=o.currentTarget,i=n+'Handler';
-		e.removeEventListener(n,e[i]);
-		e[i]=null
-	},
-	depOnLoad=e=>{drop(e,'error')},
-	depOnError=e=>{drop(e,'load');w.stop()},
-	frag=new DocumentFragment(),
-	m=[],
-	f=(b,s)=>{
-		for(const a of b){
+	deps=[],
+	toScripts=(e,s)=>{
+		for(const a of e){
 			if('string'!==typeof a){
-				f(a[1],[s,a[0]])
+				toScripts(a[1],[s,a[0]])
 			}else{
-				m[m.length]=[s,a]
+				deps.push([s,a])
 			}
 		}
 	},
-	d=w.document;
+	{
+		Promise:P,
+		document:d
+	}=w;
 
-	f(JSON.parse(d.currentScript.dataset.),'./');
+	toScripts(JSON.parse(d.currentScript.dataset.deps),'./');
 
-	m.forEach((v,i,m)=>{
+	deps.forEach((v,i,m)=>{
 		const e=frag.appendChild(d.createElement('script'));
-		e.loadHandler=onceAt(e,'load',depOnLoad);
-		e.errorHandler=onceAt(e,'error',depOnError);
-		e.src=v.flat(Infinity).join('')
+		e.src=v.flat(Infinity).join('');
+		m[i]=new P((resolve,reject)=>{
+			onceAt(e,'load',resolve);
+			onceAt(e,'error',reject)
+		})
 	});
 
-	m.length=0;
+	d.head.append(frag);
 
-	d.head.append(frag)
+	P.all(deps).then(()=>{
+		w.initDemo(w,d,onceAt,frag)
+	}).catch(e=>{
+		w.stop();
+		console.info('deps error',e.target.src)
+	})
 })(window);
