@@ -18,9 +18,10 @@
 		Promise:P,
 		document:d
 	}=w,
+	initScript=d.currentScript,
 	frag=new w.DocumentFragment();
 
-	toScripts(JSON.parse(d.currentScript.dataset.deps),'./');
+	toScripts(JSON.parse(initScript.dataset.deps),'./');
 
 	deps.forEach((v,i,m)=>{
 		const e=frag.appendChild(d.createElement('script'));
@@ -35,6 +36,7 @@
 
 	P.all(deps).then(()=>{
 		deps.length=0;
+		initScript.remove();
 		const f=()=>{w.dispatchEvent(new Event('demoCanStart'))};
 		if(d.readyState!=='complete'){
 			onceAt(w,'load',f)
