@@ -5,7 +5,6 @@
 		e.addEventListener(n,f);
 		return f
 	},
-	deps=[],
 	toScripts=(e,s)=>{
 		for(const a of e){
 			if('string'!==typeof a){
@@ -19,9 +18,8 @@
 		Promise:P,
 		document:d
 	}=w;
-
+	let deps=[];
 	toScripts(JSON.parse(d.currentScript.dataset.deps),'./');
-
 	deps.forEach((v,i,m)=>{
 		const e=frag.appendChild(d.createElement('script'));
 		e.src=v.flat(Infinity).join('');
@@ -30,10 +28,9 @@
 			onceAt(e,'error',reject)
 		})
 	});
-
 	d.head.append(frag);
-
 	P.all(deps).then(()=>{
+		deps=null;
 		w.initDemo(w,d,onceAt,frag)
 	}).catch(e=>{
 		w.stop();
